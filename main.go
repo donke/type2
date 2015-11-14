@@ -16,6 +16,15 @@ func main() {
 	}
 
 	for _, arg := range os.Args[1:] {
+		fi, err := os.Stat(arg)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, arg+":", err)
+			os.Exit(1)
+		}
+		if fi.IsDir() {
+			continue
+		}
+
 		r, err := os.Open(arg)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, arg+":", err)
