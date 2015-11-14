@@ -2,7 +2,7 @@
 my type command.
 
 ## Todo
-* handle multi character encoding
+* handle multiple character encodings
 * print filename
 
 ## License
