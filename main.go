@@ -8,18 +8,25 @@ import (
 	"github.com/donke/wildp"
 )
 
+const (
+	ok = 0
+	ng = 1
+)
+
 func main() {
 	os.Args = wildp.Args
 	if len(os.Args) == 1 {
 		fmt.Fprintln(os.Stderr, "コマンドの構文が誤っています。")
-		os.Exit(1)
+		os.Exit(ng)
 	}
 
+	var result = ok
 	for _, arg := range os.Args[1:] {
 		fi, err := os.Stat(arg)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, arg+":", err)
-			os.Exit(1)
+			result = ng
+			continue
 		}
 		if fi.IsDir() {
 			continue
@@ -28,14 +35,15 @@ func main() {
 		r, err := os.Open(arg)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, arg+":", err)
-			os.Exit(1)
+			result = ng
+			continue
 		}
 		defer r.Close()
 
 		if _, err = io.Copy(os.Stdout, r); err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			result = ng
 		}
 	}
-	os.Exit(0)
+	os.Exit(result)
 }
