@@ -21,6 +21,11 @@ func main() {
 		os.Exit(ng)
 	}
 
+	var multiple = false
+	if len(os.Args[1:]) > 1 {
+		multiple = true
+	}
+
 	var result = ok
 	for _, arg := range os.Args[1:] {
 		t2 := type2.New(arg)
@@ -30,6 +35,9 @@ func main() {
 		}
 		defer t2.Close()
 
+		if multiple {
+			fmt.Fprintf(os.Stderr, "%s\n\n\n", t2.Name)
+		}
 		if _, err := io.Copy(os.Stdout, t2.File); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			result = ng
