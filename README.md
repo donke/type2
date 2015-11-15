@@ -5,7 +5,7 @@ my type command.
 * handle multiple character encodings
 * print filename
 
-## Instalation
+## Installation
 ```
 $ go get github.com/donke/type2/cmd/type2
 ```
