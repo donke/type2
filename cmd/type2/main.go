@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/donke/type2"
 	"github.com/donke/wildp"
 )
 
@@ -22,25 +23,14 @@ func main() {
 
 	var result = ok
 	for _, arg := range os.Args[1:] {
-		fi, err := os.Stat(arg)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, arg+":", err)
+		t2 := type2.New(arg)
+		if !t2.Typeable {
 			result = ng
 			continue
 		}
-		if fi.IsDir() {
-			continue
-		}
+		defer t2.Close()
 
-		r, err := os.Open(arg)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, arg+":", err)
-			result = ng
-			continue
-		}
-		defer r.Close()
-
-		if _, err = io.Copy(os.Stdout, r); err != nil {
+		if _, err := io.Copy(os.Stdout, t2.File); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			result = ng
 		}
