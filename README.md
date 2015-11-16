@@ -3,7 +3,6 @@ my type command.
 
 ## Todo
 * handle multiple character encodings
-* print filename
 
 ## Installation
 ```
