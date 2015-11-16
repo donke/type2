@@ -31,6 +31,10 @@ func main() {
 		t2 := type2.New(arg)
 		if !t2.Typeable {
 			result = ng
+			fmt.Fprintln(os.Stderr, "指定されたファイルが見つかりません。")
+			if multiple {
+				fmt.Fprintln(os.Stderr, "処理中にエラーが発生しました: "+t2.Name)
+			}
 			continue
 		}
 		defer t2.Close()
@@ -41,6 +45,9 @@ func main() {
 		if _, err := io.Copy(os.Stdout, t2.File); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			result = ng
+			if multiple {
+				fmt.Fprintln(os.Stderr, "処理中にエラーが発生しました: "+t2.Name)
+			}
 		}
 	}
 	os.Exit(result)
