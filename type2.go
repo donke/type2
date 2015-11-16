@@ -12,9 +12,18 @@ type Type2 struct {
 
 func New(name string) *Type2 {
 	var typeable bool = true
-	_, err := os.Stat(name)
+	fi, err := os.Stat(name)
 	if err != nil && os.IsNotExist(err) {
 		typeable = false
+	}
+	if fi.IsDir() {
+		typeable = false
+	}
+	if !typeable {
+		return &Type2{
+			Name:     name,
+			Typeable: false,
+		}
 	}
 
 	file, err := os.Open(name)
