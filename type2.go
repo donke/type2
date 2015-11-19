@@ -16,7 +16,7 @@ func New(name string) *Type2 {
 	if err != nil && os.IsNotExist(err) {
 		typeable = false
 	}
-	if fi.IsDir() {
+	if err == nil && fi.IsDir() {
 		typeable = false
 	}
 	if !typeable {
