@@ -1,11 +1,11 @@
 package type2
 
 const (
-    EucJp = iota
-    ShiftJis
-    Utf8
-    Iso2022Jp
-    Unknown
+	EucJp = iota
+	ShiftJis
+	Utf8
+	Iso2022Jp
+	Unknown
 )
 
 type arc struct {
