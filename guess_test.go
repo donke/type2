@@ -19,3 +19,11 @@ func TestGuessEUCJP(t *testing.T) {
 		t.Errorf("got %v", actual)
 	}
 }
+
+func TestGuessSHIFJIS(t *testing.T) {
+	sjis := "\x67\x6f\x82\xcd\x8a\x79\x82\xb5"
+	actual := guess_jp([]byte(sjis))
+	if actual != ShiftJis {
+		t.Errorf("got %v", actual)
+	}
+}
