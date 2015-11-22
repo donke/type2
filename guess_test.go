@@ -5,6 +5,7 @@ import (
 )
 
 func TestGuessUTF8(t *testing.T) {
+	// goは楽し
 	utf8 := "\x67\x6f\xe3\x81\xaf\xe6\xa5\xbd\xe3\x81\x97"
 	actual := guess_jp([]byte(utf8))
 	if actual != Utf8 {
@@ -13,6 +14,7 @@ func TestGuessUTF8(t *testing.T) {
 }
 
 func TestGuessEUCJP(t *testing.T) {
+	// goは楽し
 	eucjp := "\x67\x6f\xa4\xcf\xb3\xda\xa4\xb7"
 	actual := guess_jp([]byte(eucjp))
 	if actual != EucJp {
@@ -21,6 +23,7 @@ func TestGuessEUCJP(t *testing.T) {
 }
 
 func TestGuessSHIFJIS(t *testing.T) {
+	// goは楽し
 	sjis := "\x67\x6f\x82\xcd\x8a\x79\x82\xb5"
 	actual := guess_jp([]byte(sjis))
 	if actual != ShiftJis {
