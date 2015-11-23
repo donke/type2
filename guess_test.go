@@ -30,3 +30,12 @@ func TestGuessSHIFJIS(t *testing.T) {
 		t.Errorf("got %v", actual)
 	}
 }
+
+func TestGuessISO2022JP(t *testing.T) {
+	// goは楽し
+	jis := "\x67\x6f\x1b\x24\x42\x24\x4f\x33\x5a\x24\x37\x1b\x28\x42"
+	actual := guess_jp([]byte(jis))
+	if actual != Iso2022Jp {
+		t.Errorf("got %v", actual)
+	}
+}
