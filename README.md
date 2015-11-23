@@ -1,8 +1,10 @@
 # type2
 my type command.
 
-## Todo
-* handle multiple character encodings
+## Usage
+```
+$ type2 file...
+```
 
 ## Installation
 ```
