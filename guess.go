@@ -37,7 +37,7 @@ func guess_jp(buf []byte) string {
 	eucj := new_dfa(eucjStates, eucjArcs, "EUC-JP")
 	sjis := new_dfa(sjisStates, sjisArcs, "Shift_JIS")
 	utf8 := new_dfa(utf8States, utf8Arcs, "UTF-8")
-    isoj := new_dfa(nil, nil, "ISO2022-JP")
+	isoj := new_dfa(nil, nil, "ISO2022-JP")
 
 	buflen := len(buf)
 	for i := 0; i < buflen; i++ {
@@ -74,7 +74,16 @@ func guess_jp(buf []byte) string {
 		}
 	}
 
+	top := pickupHighScore(eucj, sjis, utf8)
+	if top != nil {
+		return top.charset
+	}
+	return ""
+}
+
+func pickupHighScore(eucj, sjis, utf8 *dfa) *dfa {
 	var top *dfa
+
 	if eucj.alive() {
 		top = eucj
 	}
@@ -96,14 +105,5 @@ func guess_jp(buf []byte) string {
 			top = sjis
 		}
 	}
-	switch top {
-	case eucj:
-		return eucj.charset
-	case utf8:
-		return utf8.charset
-	case sjis:
-		return sjis.charset
-	default:
-		return ""
-	}
+	return top
 }
