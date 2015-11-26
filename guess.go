@@ -1,27 +1,20 @@
 package type2
 
-const (
-	EucJp = iota
-	ShiftJis
-	Utf8
-	Iso2022Jp
-	Unknown
-)
-
 type arc struct {
 	next  int
 	score float32
 }
 
 type dfa struct {
-	states [][]int
-	arcs   []arc
-	state  int
-	score  float32
+	states  [][]int
+	arcs    []arc
+	state   int
+	score   float32
+	charset string
 }
 
-func new_dfa(st [][]int, ar []arc) *dfa {
-	return &dfa{st, ar, 0, 1.0}
+func new_dfa(st [][]int, ar []arc, charset string) *dfa {
+	return &dfa{st, ar, 0, 1.0, charset}
 }
 
 func (d *dfa) alive() bool {
@@ -40,10 +33,11 @@ func (d *dfa) next(c int) {
 	}
 }
 
-func guess_jp(buf []byte) int {
-	eucj := new_dfa(eucjStates, eucjArcs)
-	sjis := new_dfa(sjisStates, sjisArcs)
-	utf8 := new_dfa(utf8States, utf8Arcs)
+func guess_jp(buf []byte) string {
+	eucj := new_dfa(eucjStates, eucjArcs, "EUC-JP")
+	sjis := new_dfa(sjisStates, sjisArcs, "Shift_JIS")
+	utf8 := new_dfa(utf8States, utf8Arcs, "UTF-8")
+    isoj := new_dfa(nil, nil, "ISO2022-JP")
 
 	buflen := len(buf)
 	for i := 0; i < buflen; i++ {
@@ -53,30 +47,30 @@ func guess_jp(buf []byte) int {
 				c = int(buf[i+1])
 				i = i + 1
 				if c == '$' || c == '(' {
-					return Iso2022Jp
+					return isoj.charset
 				}
 			}
 		}
 		if eucj.alive() {
 			if !sjis.alive() && !utf8.alive() {
-				return EucJp
+				return eucj.charset
 			}
 			eucj.next(c)
 		}
 		if sjis.alive() {
 			if !eucj.alive() && !utf8.alive() {
-				return ShiftJis
+				return sjis.charset
 			}
 			sjis.next(c)
 		}
 		if utf8.alive() {
 			if !sjis.alive() && !eucj.alive() {
-				return Utf8
+				return utf8.charset
 			}
 			utf8.next(c)
 		}
 		if !eucj.alive() && !sjis.alive() && !utf8.alive() {
-			return Unknown
+			return ""
 		}
 	}
 
@@ -104,12 +98,12 @@ func guess_jp(buf []byte) int {
 	}
 	switch top {
 	case eucj:
-		return EucJp
+		return eucj.charset
 	case utf8:
-		return Utf8
+		return utf8.charset
 	case sjis:
-		return ShiftJis
+		return sjis.charset
 	default:
-		return Unknown
+		return ""
 	}
 }

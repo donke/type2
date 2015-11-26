@@ -54,9 +54,9 @@ func New(name string) *Type2 {
 	var reader io.Reader
 	e := guess_jp(buf)
 	switch e {
-	case ShiftJis:
+	case "Shift_JIS":
 		reader = transform.NewReader(file, japanese.ShiftJIS.NewDecoder())
-	case EucJp:
+	case "EUC-JP":
 		reader = transform.NewReader(file, japanese.EUCJP.NewDecoder())
 	default:
 		reader = file
